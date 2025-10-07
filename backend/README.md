@@ -15,7 +15,8 @@
 {
     "status": "success",
     "code": 200,
-    "response": {
+    "requests": 20,
+    "data": {
         "key1": "value1",
         "key2": "value2"
     }
@@ -26,6 +27,7 @@
 {
     "status": "error",
     "code": 400,
-    "response": "Error message."
+    "requests": 20,
+    "data": "Error message."
 }
 ```
