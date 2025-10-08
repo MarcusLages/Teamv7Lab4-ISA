@@ -1,4 +1,6 @@
 const http = require("http");
+const { Response } = require("./modules/response.js");
+const { MSGS, WORD_NOT_FOUND_ERR_KEY } = require("./lang/messages/en/user.js");
 
 const URL_TEMPLATE = "http://%1";
 
@@ -7,6 +9,10 @@ class App {
     static DEFINITION_PARAM = "word";
 
     constructor() {
+        this.dictionary = {};
+        this.req_num = 0;
+        this.last_updated = new Date().toLocaleString();
+
         this.port = process.env.PORT || 8000;
         this.server = http.createServer((req, res) => {
             const req_url = new URL(req.url,
@@ -17,13 +23,19 @@ class App {
                 case "GET":
                     if(req_url.pathname.includes(App.DEFINITION_ROUTE)) {
                         const word = req_url.searchParams.get(App.DEFINITION_PARAM);
+                        const data = this.processGetDefinition(word);
+                        if (data) {
+                            Response.successRes(res, data);
+                        } else {
+                            Response.notFoundError(res, MSGS[WORD_NOT_FOUND_ERR_KEY]);
+                        }
                     } else {
-                        // TODO: Send error message.
+                        Response.notFoundError(res)
                     }
                     break;
                 case "POST":
                     if(req_url.pathname.includes(App.DEFINITION_ROUTE)) {
-                        // TODO: Get word from body param.
+                        // TODO: send POST req confirmation
                     } else {
                         // TODO: Send error message.
                     }
@@ -36,7 +48,12 @@ class App {
     }
 
     processGetDefinition(word) {
-
+        if (word in this.dictionary) {
+            return { 
+                word: word,
+                definition: this.dictionary[word] 
+            }
+        }
     }
 
     processPostDefinition(word) {
