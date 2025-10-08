@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Server 1: Search page</title>
+    <link rel="stylesheet" href="css/search.css">
+</head>
+
+<body>
+
+    <div class="main_container">
+        <!-- Search container -->
+        <div class="searchbar">
+            <input id="search_input" type="text" placeholder="Enter a word here.">
+            <button id="search_button"></button>
+        </div>
+
+        <!-- Notification message -->
+        <div id="user_notification" style="display:none;">
+            <p id="notification_text"></p>
+        </div>
+
+        <!-- Display results -->
+        <div id="result_container"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="scripts/search.js"></script>
+
+</body>
+
+</html>
