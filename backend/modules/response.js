@@ -34,7 +34,7 @@ exports.Response = class Response {
     static badReqError(res, err_msg) {
         this.errorRes(
             res,
-            err_msg || err_msg || MSGS[DEFAULT_BAD_REQ_ERR_KEY],
+            err_msg || MSGS[DEFAULT_BAD_REQ_ERR_KEY],
             402
         );
     }
