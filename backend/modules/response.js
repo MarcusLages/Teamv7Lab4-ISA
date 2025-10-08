@@ -1,3 +1,5 @@
+const { MSGS, DEFAULT_BAD_REQ_ERR_KEY, DEFAULT_NOT_FOUND_ERR_KEY } = require("../lang/messages/en/user.js")
+
 exports.Response = class Response {
     static successRes(data, code) {
         return {
@@ -19,8 +21,7 @@ exports.Response = class Response {
         return {
             status: "error",
             code: 402,
-            // TODO: User facing message.
-            data: err_msg || "Bad request."
+            data: err_msg || MSGS[DEFAULT_BAD_REQ_ERR_KEY]
         }
     }
 
@@ -28,8 +29,7 @@ exports.Response = class Response {
         return {
             status: "error",
             code: 404,
-            // TODO: User facing message.
-            data: err_msg || "Resource or page not found."
+            data: err_msg || MSGS[DEFAULT_NOT_FOUND_ERR_KEY]
         }
     }
 }
