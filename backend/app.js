@@ -41,19 +41,21 @@ class App {
                     break;
                 case "POST":
                     if(req_url.pathname.includes(App.DEFINITION_ROUTE)) {
-                        let query = "";
-                        req.on("data", chunk => { query += chunk; });
+                        let body_str = "";
+                        req.on("data", chunk => { body_str += chunk; });
                         req.on("end", () => {
-                            const param = new URLSearchParams(query);
-                            const word = param.get("word");
-                            const definition = param.get("definition");
-                            const data = this.processPostDefinition(word, definition);
-
-                            if (data) {
-                                if (data.warning) Response.successRes(res, data);
-                                else Response.createdRes(res, data);
-                            } else {
-                                Response.badReqError(MSGS[NO_WORD_DEF_PARAM_ERR_KEY]);
+                            try {
+                                const body = JSON.parse(body_str);
+                                const data = this.processPostDefinition(body.word, body.definition);
+                                
+                                if (data) {
+                                    if (data.warning) Response.successRes(res, data);
+                                    else Response.createdRes(res, data);
+                                } else {
+                                    Response.badReqError(res, MSGS[NO_WORD_DEF_PARAM_ERR_KEY]);
+                                }
+                            } catch (err) {
+                                Response.badReqError(res);
                             }
                         });
                     } else {
@@ -80,18 +82,20 @@ class App {
         if (!word || !definition) return;
 
         const data = {};
-        if (word in this.dictionary)
+        if (word in this.dictionary) {
             data.warning = MSGS[WORD_IN_DICT_WARN_KEY];
-        else
+        } else {
             this.words_num++;
-
-        this.last_updated = new Date().toLocaleString();
+            this.last_updated = new Date().toLocaleString();
+            this.dictionary[word] = definition;
+        }
 
         data.req_num = ++this.req_num;
         data.words_num = this.words_num;
         data.last_updated = this.last_updated;
         data.word = word;
         data.definition = definition;
+        return data;
     }
 
     start() {

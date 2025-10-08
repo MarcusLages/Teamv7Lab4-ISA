@@ -15,11 +15,11 @@ exports.Response = class Response {
             code: code || 200,
             data: data
         };
-        this.sendResponse(res, res_data, code);
+        this.sendResponse(res, res_data, res_data.code);
     }
 
     static createdRes(res, data) {
-        this.sendResponse(res, data, 201);
+        this.successRes(res, data, 201);
     }
 
     static errorRes(res, err_msg, err_code) {
