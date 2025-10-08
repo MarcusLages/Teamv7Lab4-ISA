@@ -1,3 +1,6 @@
+### Domain in Use
+Prepend **https://mvslages.com/** to all endpoints.
+
 ### API Endpoints
 ##### `GET: v1/definitions/`
 - `word` param: Gets definition of a word.
