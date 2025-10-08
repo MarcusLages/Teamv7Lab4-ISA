@@ -2,7 +2,8 @@
 ##### `GET: v1/definitions/`
 - `word` param: Gets definition of a word.
 - Returns a dictionary with the `word` as key and the definition as value.
-###### Example:
+- Returns a NotFound Error if definition was not found.
+###### Request Example 1:
 - Req: `v1/definitions/?word=book`
 - Res:
 ```json
@@ -12,6 +13,16 @@
     "data": {
         "book": "Written or printed work consisting of pages glued or sewn together"
     }
+}
+```
+###### Request Example 1:
+- Req: `v1/definitions/?word=grumper`
+- Res:
+```json
+{
+    "status": "success",
+    "code": 404,
+    "data": "Word not found in dictionary."
 }
 ```
 
@@ -26,7 +37,7 @@
 ```json
 {
     "status": "success",
-    "code": 200,
+    "code": 201,
     "data": {
         "req_num": 20,
         "words_num": 17,
