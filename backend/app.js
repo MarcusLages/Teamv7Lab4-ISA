@@ -40,33 +40,37 @@ class App {
                     }
                     break;
                 case "POST":
-                    if(req_url.pathname.includes(App.DEFINITION_ROUTE)) {
-                        let body_str = "";
-                        req.on("data", chunk => { body_str += chunk; });
-                        req.on("end", () => {
-                            try {
-                                const body = JSON.parse(body_str);
-                                const data = this.processPostDefinition(body.word, body.definition);
-                                
-                                if (data) {
-                                    if (data.warning) Response.successRes(res, data);
-                                    else Response.createdRes(res, data);
-                                } else {
-                                    Response.badReqError(res, MSGS[NO_WORD_DEF_PARAM_ERR_KEY]);
-                                }
-                            } catch (err) {
-                                Response.badReqError(res);
-                            }
-                        });
-                    } else {
-                        Response.notFoundError(res);
-                    }
+                    this.handlePOST(req_url, req, res);
                     break;
                 default:
                     Response.notFoundError(res);
                     break;
             }
         })
+    }
+
+    handlePOST(req_url, req, res) {
+        if (req_url.pathname.includes(App.DEFINITION_ROUTE)) {
+            let body_str = "";
+            req.on("data", chunk => { body_str += chunk; });
+            req.on("end", () => {
+                try {
+                    const body = JSON.parse(body_str);
+                    const data = this.processPostDefinition(body.word, body.definition);
+
+                    if (data) {
+                        if (data.warning) Response.successRes(res, data);
+                        else Response.createdRes(res, data);
+                    } else {
+                        Response.badReqError(res, MSGS[NO_WORD_DEF_PARAM_ERR_KEY]);
+                    }
+                } catch (err) {
+                    Response.badReqError(res);
+                }
+            });
+        } else {
+            Response.notFoundError(res);
+        }
     }
 
     processGetDefinition(word) {
