@@ -42,7 +42,7 @@ exports.Response = class Response {
     static notFoundError(res, err_msg) {
         this.errorRes(
             res,
-            err_msg || err_msg || MSGS[DEFAULT_NOT_FOUND_ERR_KEY],
+            err_msg || MSGS[DEFAULT_NOT_FOUND_ERR_KEY],
             404
         );
     }

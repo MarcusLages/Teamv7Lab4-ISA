@@ -11,7 +11,8 @@
     "status": "success",
     "code": 200,
     "data": {
-        "book": "Written or printed work consisting of pages glued or sewn together"
+        "word": "book",
+        "definition": "Written or printed work consisting of pages glued or sewn together"
     }
 }
 ```
@@ -42,7 +43,8 @@
         "req_num": 20,
         "words_num": 17,
         "last_updated": "07/10/2025, 15:15:00",
-        "book": "Written or printed work consisting of pages glued or sewn together"
+        "word": "book",
+        "definition": "Written or printed work consisting of pages glued or sewn together"
     }
 }
 ```
@@ -59,7 +61,8 @@
         "words_num": 17,
         "last_updated": "07/10/2025, 15:15:00",
         "warning": "Word already exists in the dictionary.",
-        "book": "Written or printed work consisting of pages glued or sewn together"
+        "word": "book",
+        "definition": "Written or printed work consisting of pages glued or sewn together"
     }
 }
 ```
