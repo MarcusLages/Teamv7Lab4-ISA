@@ -4,9 +4,9 @@ exports.Response = class Response {
     
     static RES_CONTENT_TYPE = "application/json";
     
-    static sendResponse(res, code, data) {
+    static sendResponse(res, data, code) {
         res.writeHead(code, { "Content-Type": this.RES_CONTENT_TYPE });
-        res.end(data);
+        res.end(JSON.stringify(data));
     } 
 
     static successRes(res, data, code) {
