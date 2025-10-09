@@ -16,13 +16,19 @@ class App {
 
         this.port = process.env.PORT || 8000;
         this.server = http.createServer((req, res) => {
+
+            // CORS MISSING ALLOW ORIGIN
+            res.setHeader("Access-Control-Allow-Origin", "*"); // allow all origins
+            res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+            
             const req_url = new URL(req.url,
                 URL_TEMPLATE.replace("%1", req.headers.host)
             );
-        
+
             switch (req.method) {
                 case "GET":
-                    if(req_url.pathname.includes(App.DEFINITION_ROUTE)) {
+                    if (req_url.pathname.includes(App.DEFINITION_ROUTE)) {
                         const word = req_url.searchParams.get(App.DEFINITION_PARAM);
                         if (!word) {
                             Response.badReqError(res, MSGS[NO_WORD_PARAM_ERR_KEY]);
@@ -75,9 +81,9 @@ class App {
 
     processGetDefinition(word) {
         if (word in this.dictionary) {
-            return { 
+            return {
                 word: word,
-                definition: this.dictionary[word] 
+                definition: this.dictionary[word]
             }
         }
     }

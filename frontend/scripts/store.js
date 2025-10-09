@@ -1,37 +1,63 @@
-import {USER_MESSAGES} from "../lang/messages/en/user.js"
+import { USER_MESSAGES } from "../lang/messages/en/user.js";
 
 const notification = document.getElementById("user_notification");
-const submit_button = document.getElementById("submit_form");
 const submission_text = document.getElementById("notification_text");
+const submit_button = document.getElementById("submit_form");
 
-// Need to edit for error message
-function handleFormSubmit(){
-    event.preventDefault(); // stop form from refreshing the page (clears error msg rn)
+const API_URL = "https://mvslages.com/v1/definitions";
 
-    const word = document.getElementById("word");
-    const definition = document.getElementById("definition");
+// Helper to show notification
+function showNotification(message, isError = false) {
+    notification.style.display = "block";
+    submission_text.innerText = message;
+    submission_text.style.color = isError ? "red" : "green";
+}
 
-    // Check if word and definition is valid.
+// Handle form submission
+async function handleFormSubmit(event) {
+    event.preventDefault(); // Prevent form refresh
+
+    const word_input = document.getElementById("word");
+    const definition_input = document.getElementById("definition");
+
+    const word = word_input.value.trim();
+    const definition = definition_input.value.trim();
+
+    // Validation
     if (!word || !definition) {
-        notification.display= "block";
-        submission_text.innerText = USER_MESSAGES.INVALID_INPUT
+        showNotification(USER_MESSAGES.INVALID_INPUT, true);
         return;
     }
 
-    // To do: Send data to backend api
-    // Handle success
-    // Handle failure
+    try {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ word, definition }),
+        });
 
-    setTimeout(() => {
-        notification.style.display="block"
-        notification_text.innerText = USER_MESSAGES.SUCCESS_MSG
-    }, 1000);
+        const data = await response.json();
+
+        if (data.status === "success") {
+            // Success → either new word (201) or duplicate (200 with warning)
+            if (data.data.warning) {
+                showNotification(data.data.warning, false);
+            } else {
+                showNotification(USER_MESSAGES.SUCCESS_MSG, false);
+            }
+        } else {
+            showNotification(data.data || USER_MESSAGES.UNKNOWN_ERROR, true);
+        }
+    } catch (err) {
+        showNotification("Network error: could not connect to server.", true);
+        console.error(err);
+    }
 }
 
-submit_button.addEventListener("click", handleFormSubmit)
+submit_button.addEventListener("click", handleFormSubmit);
 
 window.onload = () => {
     document.getElementById("word_label").innerHTML = USER_MESSAGES.WORD_LABEL;
     document.getElementById("definition_label").innerHTML = USER_MESSAGES.DEFINITION_LABEL;
-    document.getElementById("submit_form").value = USER_MESSAGES.BUTTON_LABEL;
+    document.getElementById("submit_form").innerText = USER_MESSAGES.BUTTON_LABEL;
 };
