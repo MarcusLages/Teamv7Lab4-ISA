@@ -7,4 +7,6 @@ export const USER_MESSAGES = {
     SEARCH_LABEL: "Search",
     INVALID_SEARCH_INPUT: "Enter a word",
     SEARCH_MESSAGE: "Searched for ",
+    NETWORK_ERROR: "Network Error: couldn't connect to the server",
+    INVALID_TYPE: "Word must only have letters",
 };

@@ -33,7 +33,7 @@ async function handleSearch(event) {
 
     // Check if query contains only letters (no numbers or special chars)
     if (!/^[a-zA-Z]+$/.test(query)) {
-        showNotification("Please enter only letters (no numbers or special chars).", true);
+        showNotification(USER_MESSAGES.INVALID_TYPE, true);
         return;
     }
 
@@ -56,7 +56,7 @@ async function handleSearch(event) {
             showNotification(`${query} not found in dictionary.`, true);
         }
     } catch (err) {
-        showNotification("Network error: could not connect to server.", true);
+        showNotification(USER_MESSAGES.NETWORK_ERROR, true);
         console.error(err);
     }
 }

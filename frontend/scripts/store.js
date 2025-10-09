@@ -11,6 +11,10 @@ function showNotification(message, isError = false) {
     notification.style.display = "block";
     submission_text.innerText = message;
     submission_text.style.color = isError ? "red" : "green";
+
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 3000);
 }
 
 // Handle form submission
@@ -26,6 +30,12 @@ async function handleFormSubmit(event) {
     // Validation
     if (!word || !definition) {
         showNotification(USER_MESSAGES.INVALID_INPUT, true);
+        return;
+    }
+
+    // Only accept letters for word
+    if (!/^[a-zA-Z]+$/.test(word)) {
+        showNotification(USER_MESSAGES.INVALID_TYPE, true);
         return;
     }
 
@@ -45,11 +55,16 @@ async function handleFormSubmit(event) {
             } else {
                 showNotification(USER_MESSAGES.SUCCESS_MSG, false);
             }
+
+            // Reset fields so user can enter another word:definiton
+            document.getElementById("word").value = "";
+            document.getElementById("definition").value = "";
+
         } else {
             showNotification(data.data || USER_MESSAGES.UNKNOWN_ERROR, true);
         }
     } catch (err) {
-        showNotification("Network error: could not connect to server.", true);
+        showNotification(USER_MESSAGES.NETWORK_ERROR, true);
         console.error(err);
     }
 }
