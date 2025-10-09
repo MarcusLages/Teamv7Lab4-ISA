@@ -21,10 +21,17 @@ class App {
             res.setHeader("Access-Control-Allow-Origin", "*"); // allow all origins
             res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
             res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-            
+
             const req_url = new URL(req.url,
                 URL_TEMPLATE.replace("%1", req.headers.host)
             );
+
+            // handle preflight OPTIONS request
+            if (req.method === "OPTIONS") {
+                res.writeHead(204); // No Content
+                res.end();
+                return;
+            }
 
             switch (req.method) {
                 case "GET":
