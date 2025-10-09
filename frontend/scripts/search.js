@@ -19,7 +19,7 @@ function showNotification(message, isError = false) {
 async function handleSearch(event) {
     event.preventDefault(); // Prevent form refresh (if inside a form)
 
-    const query = search_input.value.trim();
+    const query = search_input.value.trim().toLowerCase();
 
     // Clear previous results
     result_container.innerHTML = "";
