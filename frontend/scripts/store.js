@@ -39,7 +39,7 @@ async function handleFormSubmit(event) {
         const data = await response.json();
 
         if (data.status === "success") {
-            // Success → either new word (201) or duplicate (200 with warning)
+            // Success -> new word (201) or duplicate (200 with warning)
             if (data.data.warning) {
                 showNotification(data.data.warning, false);
             } else {

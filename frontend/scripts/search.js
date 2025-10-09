@@ -6,33 +6,60 @@ const notification_text = document.getElementById("notification_text");
 const search_input = document.getElementById("search_input");
 const result_container = document.getElementById("result_container");
 
-function handleSearch() {
-    // event.preventDefault(); 
+const API_URL = "https://mvslages.com/v1/definitions";
+
+// Helper to show notification
+function showNotification(message, isError = false) {
+    notification.style.display = "block";
+    notification_text.innerText = message;
+    notification_text.style.color = isError ? "red" : "green";
+}
+
+// Perform GET request to fetch word definition
+async function handleSearch(event) {
+    event.preventDefault(); // Prevent form refresh (if inside a form)
 
     const query = search_input.value.trim();
 
     // Clear previous results
     result_container.innerHTML = "";
-
-    // Hide notification initially
     notification.style.display = "none";
 
     // Validate input
     if (!query) {
-        notification.style.display = "block";
-        notification_text.innerText = USER_MESSAGES.INVALID_SEARCH_INPUT;
+        showNotification(USER_MESSAGES.INVALID_SEARCH_INPUT, true);
         return;
     }
 
-    // Todo: GET request here
+    // Check if query contains only letters (no numbers or special chars)
+    if (!/^[a-zA-Z]+$/.test(query)) {
+        showNotification("Please enter only letters (no numbers or special chars).", true);
+        return;
+    }
 
-    // Placeholder success message
-    setTimeout(() => {
-        notification.style.display = "block";
-        notification_text.innerText = USER_MESSAGES.SEARCH_MESSAGE + `${query}`
-    }, 500);
+    try {
+        const response = await fetch(`${API_URL}/?word=${encodeURIComponent(query)}`);
+        const data = await response.json();
+
+        if (data.status === "success") {
+            
+            // Word found
+            if (data.code === 200 && data.data.word && data.data.definition) {
+                result_container.innerHTML = `
+                    <p><strong>${data.data.word}:</strong> ${data.data.definition}</p>
+                `;
+            }
+            else if (data.code === 404) {
+                showNotification(data.data || "Word not found.", true);
+            }
+        } else {
+            showNotification(`${query} not found in dictionary.`, true);
+        }
+    } catch (err) {
+        showNotification("Network error: could not connect to server.", true);
+        console.error(err);
+    }
 }
-
 
 submit_button.addEventListener("click", handleSearch);
 
